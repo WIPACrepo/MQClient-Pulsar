@@ -1,2 +1,2 @@
 # MQClient-Pulsar
-An Apache Pulsar Implementation of a Message Queue Client
+An Apache Pulsar Message Queue Client API
