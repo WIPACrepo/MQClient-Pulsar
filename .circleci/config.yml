@@ -14,7 +14,8 @@ jobs:
     integrate:
         docker:
             - image: circleci/python:3.8
-            - image: deadtrickster/rabbitmq_prometheus:3.7
+            - image: apachepulsar/pulsar:2.5.1
+              command: bin/pulsar standalone
         steps:
             - checkout
             - run:
@@ -22,28 +23,31 @@ jobs:
                 command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
                 environment:
                   DOCKERIZE_VERSION: v0.3.0
-            - run: dockerize -wait tcp://localhost:5672 -timeout 1m # RabbitMQ
+            - run: dockerize -wait tcp://localhost:8080 -timeout 1m # Pulsar
+            - run: dockerize -wait tcp://localhost:6650 -timeout 1m # Pulsar
             - run: |
                 pip install --user tox
-                tox integration_tests/test_rabbitmq.py -vv
+                tox integration_tests -vv
 
-    examples:
-        docker:
-            - image: circleci/python:3.8
-            - image: deadtrickster/rabbitmq_prometheus:3.7
-        steps:
-            - checkout
-            - run:
-                name: install dockerize
-                command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-                environment:
-                  DOCKERIZE_VERSION: v0.3.0
-            - run: dockerize -wait tcp://localhost:5672 -timeout 1m # RabbitMQ
-            - run: |
-                pip install --user tox
-                tox --notest -vv
-                . .tox/py/bin/activate
-                ./examples/rabbitmq/run.sh
+    # examples:
+    #     docker:
+    #         - image: circleci/python:3.8
+    #         - image: apachepulsar/pulsar:2.5.1
+    #           command: bin/pulsar standalone
+    #     steps:
+    #         - checkout
+    #         - run:
+    #             name: install dockerize
+    #             command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+    #             environment:
+    #               DOCKERIZE_VERSION: v0.3.0
+    #         - run: dockerize -wait tcp://localhost:8080 -timeout 1m # Pulsar
+    #         - run: dockerize -wait tcp://localhost:6650 -timeout 1m # Pulsar
+    #         - run: |
+    #             pip install --user tox
+    #             tox --notest -vv
+    #             . .tox/py/bin/activate
+
 
 workflows:
     version: 2
@@ -51,4 +55,4 @@ workflows:
         jobs:
             - test
             - integrate
-            - examples
+            # - examples
