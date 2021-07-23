@@ -1,0 +1,9 @@
+git+https://github.com/WIPACrepo/MQClient@v0.0.9#egg=mqclient
+apache-bookkeeper-client
+mypy
+pulsar-client==2.5.1
+pytest
+pytest-asyncio
+pytest-flake8
+pytest-mock
+pytest-mypy
