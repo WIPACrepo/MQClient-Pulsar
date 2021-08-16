@@ -19,6 +19,11 @@ shop = SetupShop(
     "Message Queue Client API with Apache Pulsar",
 )
 
+# FIXME - remove this hacky code
+kwargs = shop.get_kwargs()
+kwargs["install_requires"].append(
+    "mqclient @ git+https://github.com/WIPACrepo/MQClient@bug-fix-telemetry"
+)
 setup(
     url="https://github.com/WIPACrepo/MQClient-Pulsar",
     package_data={shop.name: ["py.typed", "requirements.txt"]},
