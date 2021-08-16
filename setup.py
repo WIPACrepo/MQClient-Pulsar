@@ -27,5 +27,5 @@ kwargs["install_requires"].append(
 setup(
     url="https://github.com/WIPACrepo/MQClient-Pulsar",
     package_data={shop.name: ["py.typed", "requirements.txt"]},
-    **shop.get_kwargs(),
+    **kwargs,
 )
