@@ -1,4 +1,4 @@
-git+https://github.com/WIPACrepo/MQClient@v0.0.9#egg=mqclient
+git+https://github.com/WIPACrepo/MQClient@v0.0.11#egg=mqclient
 apache-bookkeeper-client
 mypy
 pulsar-client==2.5.1

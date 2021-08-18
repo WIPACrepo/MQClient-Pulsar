@@ -3,6 +3,7 @@
 from typing import Any, List
 
 import pytest
+from mqclient.backend_interface import Message
 from mqclient.testing.unit_tests import BackendUnitTest
 from mqclient_pulsar.apachepulsar import Backend
 
@@ -67,8 +68,8 @@ class TestUnitApachePulsar(BackendUnitTest):
     def test_get_message(self, mock_con: Any, queue_name: str) -> None:
         """Test getting message."""
         sub = self.backend.create_sub_queue("localhost", queue_name)
-        mock_con.return_value.subscribe.return_value.receive.return_value.data.return_value = (
-            b"foo, bar"
+        mock_con.return_value.subscribe.return_value.receive.return_value.data.return_value = Message.serialize(
+            "foo, bar"
         )
         mock_con.return_value.subscribe.return_value.receive.return_value.message_id.return_value = (
             12
@@ -77,7 +78,7 @@ class TestUnitApachePulsar(BackendUnitTest):
 
         assert m is not None
         assert m.msg_id == 12
-        assert m.data == b"foo, bar"
+        assert m.data == "foo, bar"
 
     def test_message_generator_10_upstream_error(
         self, mock_con: Any, queue_name: str
