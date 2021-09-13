@@ -70,9 +70,9 @@ class PulsarPub(Pulsar, Pub):
         Pub
     """
 
-    def __init__(self, address: str, topic: str) -> None:
+    def __init__(self, address: str, topic: str, auth_token: str = "") -> None:
         logging.debug(f"{log_msgs.INIT_PUB} ({address}; {topic})")
-        super().__init__(address, topic)
+        super().__init__(address, topic, auth_token)
         self.producer = None  # type: pulsar.Producer
 
     def connect(self) -> None:
@@ -109,9 +109,11 @@ class PulsarSub(Pulsar, Sub):
         Sub
     """
 
-    def __init__(self, address: str, topic: str, subscription_name: str) -> None:
+    def __init__(
+        self, address: str, topic: str, subscription_name: str, auth_token: str = ""
+    ) -> None:
         logging.debug(f"{log_msgs.INIT_SUB} ({address}; {topic})")
-        super().__init__(address, topic)
+        super().__init__(address, topic, auth_token=auth_token)
         self.consumer = None  # type: pulsar.Consumer
         self.subscription_name = subscription_name
         self.prefetch = 1
@@ -297,17 +299,21 @@ class Backend(backend_interface.Backend):
     SUBSCRIPTION_NAME = "i3-pulsar-sub"
 
     @staticmethod
-    def create_pub_queue(address: str, name: str) -> PulsarPub:
+    def create_pub_queue(address: str, name: str, auth_token: str = "") -> PulsarPub:
         """Create a publishing queue."""
-        q = PulsarPub(address, name)  # pylint: disable=invalid-name
+        q = PulsarPub(  # pylint: disable=invalid-name
+            address, name, auth_token=auth_token
+        )
         q.connect()
         return q
 
     @staticmethod
-    def create_sub_queue(address: str, name: str, prefetch: int = 1) -> PulsarSub:
+    def create_sub_queue(
+        address: str, name: str, prefetch: int = 1, auth_token: str = ""
+    ) -> PulsarSub:
         """Create a subscription queue."""
         # pylint: disable=invalid-name
-        q = PulsarSub(address, name, Backend.SUBSCRIPTION_NAME)
+        q = PulsarSub(address, name, Backend.SUBSCRIPTION_NAME, auth_token=auth_token)
         q.prefetch = prefetch
         q.connect()
         return q
