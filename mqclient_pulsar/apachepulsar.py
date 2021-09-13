@@ -26,12 +26,13 @@ class Pulsar(RawQueue):
         RawQueue
     """
 
-    def __init__(self, address: str, topic: str) -> None:
+    def __init__(self, address: str, topic: str, auth_token: str = "") -> None:
         """Set address, topic, and client.
 
         Arguments:
             address {str} -- the pulsar server address, if address doesn't start with 'pulsar', append 'pulsar://'
             topic {str} -- the name of the topic
+            auth_token {str} -- the (jwt) authentication token
         """
         super().__init__()
         self.address = address
@@ -39,11 +40,13 @@ class Pulsar(RawQueue):
             self.address = "pulsar://" + self.address
         self.topic = topic
         self.client = None  # type: pulsar.Client
+        self.auth = pulsar.AuthenticationToken(auth_token) if auth_token else None
 
     def connect(self) -> None:
         """Set up client."""
         super().connect()
-        self.client = pulsar.Client(self.address)
+
+        self.client = pulsar.Client(self.address, authentication=self.auth)
 
     def close(self) -> None:
         """Close client."""
@@ -139,7 +142,7 @@ class PulsarSub(Pulsar, Sub):
 
     @staticmethod
     def _to_message(  # type: ignore[override]  # noqa: F821 # pylint: disable=W0221
-        msg: pulsar.Message
+        msg: pulsar.Message,
     ) -> Optional[Message]:
         """Transform Puslar-Message to Message type."""
         id_, data = msg.message_id(), msg.data()
