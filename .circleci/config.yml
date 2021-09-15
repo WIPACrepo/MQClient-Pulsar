@@ -38,7 +38,7 @@ jobs:
         steps:
             - checkout
             - setup_remote_docker
-                # Install via apk on alpine based images
+                version: 20.10.7
             - run: |
                 wget https://download.docker.com/linux/debian/dists/buster/pool/stable/amd64/docker-ce-cli_20.10.7~3-0~debian-buster_amd64.deb
                 sudo dpkg -i docker-ce-cli_20.10.7~3-0~debian-buster_amd64.deb
