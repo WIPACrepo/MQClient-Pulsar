@@ -37,12 +37,12 @@ jobs:
               # command: bin/pulsar standalone
         steps:
             - checkout
+            - setup_remote_docker
             - run:
                 name: start pulsar-docker server with config file
                 command: |
-                   docker build .circleci/images/testpulsar/ -t testpulsar
-                   sleep 10
-                   docker run testpulsar
+                   sudo docker build .circleci/images/testpulsar/ -t testpulsar
+                   sudo docker run testpulsar &
             - run:
                 name: install dockerize
                 command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
