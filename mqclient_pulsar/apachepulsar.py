@@ -45,7 +45,6 @@ class Pulsar(RawQueue):
     def connect(self) -> None:
         """Set up client."""
         super().connect()
-
         self.client = pulsar.Client(self.address, authentication=self.auth)
 
     def close(self) -> None:

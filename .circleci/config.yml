@@ -15,6 +15,7 @@ jobs:
         docker:
             - image: circleci/python:3.8
             - image: apachepulsar/pulsar:2.5.1
+                #  TODO - copy local conf file to conf/ (which is adjacent to bin/)
               command: bin/pulsar standalone
         steps:
             - checkout
@@ -32,10 +33,15 @@ jobs:
     examples:
         docker:
             - image: circleci/python:3.8
-            - image: apachepulsar/pulsar:2.5.1
-              command: bin/pulsar standalone
+            # - image: apachepulsar/pulsar:2.5.1
+              # command: bin/pulsar standalone
         steps:
             - checkout
+            - run:
+                name: start pulsar-docker server with config file
+                command: |
+                   docker build images/pulsar/ -t testpulsar
+                   docker run testpulsar
             - run:
                 name: install dockerize
                 command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
