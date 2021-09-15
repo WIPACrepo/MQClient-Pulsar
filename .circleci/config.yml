@@ -41,6 +41,7 @@ jobs:
                 name: start pulsar-docker server with config file
                 command: |
                    docker build .circleci/images/testpulsar/ -t testpulsar
+                   sleep 10
                    docker run testpulsar
             - run:
                 name: install dockerize
