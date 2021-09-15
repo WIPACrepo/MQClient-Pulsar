@@ -40,7 +40,7 @@ jobs:
             - run:
                 name: start pulsar-docker server with config file
                 command: |
-                   docker build images/pulsar/ -t testpulsar
+                   docker build .circleci/images/testpulsar/ -t testpulsar
                    docker run testpulsar
             - run:
                 name: install dockerize
