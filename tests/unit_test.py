@@ -4,7 +4,7 @@ from typing import Any, List
 
 import pytest
 from mqclient.backend_interface import Message
-from mqclient.testing.unit_tests import BackendUnitTest
+from mqclient.implementation_tests.unit_tests import BackendUnitTest
 from mqclient_pulsar.apachepulsar import Backend
 
 
