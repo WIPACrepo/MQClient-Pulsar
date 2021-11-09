@@ -13,9 +13,9 @@ pip install tox
 tox --notest -vv
 . .tox/py/bin/activate
 
-docker run -it \
+docker run -it -d \
     -p 6650:6650 \
-    -p 8079:8079 \
+    -p 8080:8080 \
     -v $PWD/data:/pulsar/data \
     apachepulsar/pulsar:latest \
     bin/pulsar standalone
