@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.0 (2022-01-20)
+### Feature
+* _(manual release)_
+* Convert to Async-Await ([#5](https://github.com/WIPACrepo/MQClient-Pulsar/pull/5))
+
 ## v0.0.6 (2022-01-20)
 
 
