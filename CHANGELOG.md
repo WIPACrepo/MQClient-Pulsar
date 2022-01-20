@@ -2,6 +2,9 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.1 (2022-01-20)
+
+
 ## v0.1.0 (2022-01-20)
 ### Feature
 * _(manual release)_
