@@ -2,7 +2,7 @@
 
 import logging
 import time
-from typing import Generator, Optional
+from typing import AsyncGenerator, Optional
 
 import pulsar  # type: ignore
 from mqclient import backend_interface, log_msgs
@@ -42,14 +42,14 @@ class Pulsar(RawQueue):
         self.client = None  # type: pulsar.Client
         self.auth = pulsar.AuthenticationToken(auth_token) if auth_token else None
 
-    def connect(self) -> None:
+    async def connect(self) -> None:
         """Set up client."""
-        super().connect()
+        await super().connect()
         self.client = pulsar.Client(self.address, authentication=self.auth)
 
-    def close(self) -> None:
+    async def close(self) -> None:
         """Close client."""
-        super().close()
+        await super().close()
         if not self.client:
             raise ClosingFailedExcpetion("No client to close.")
         try:
@@ -74,23 +74,23 @@ class PulsarPub(Pulsar, Pub):
         super().__init__(address, topic, auth_token)
         self.producer = None  # type: pulsar.Producer
 
-    def connect(self) -> None:
+    async def connect(self) -> None:
         """Connect to producer."""
         logging.debug(log_msgs.CONNECTING_PUB)
-        super().connect()
+        await super().connect()
 
         self.producer = self.client.create_producer(self.topic)
         logging.debug(log_msgs.CONNECTED_PUB)
 
-    def close(self) -> None:
+    async def close(self) -> None:
         """Close connection."""
         logging.debug(log_msgs.CLOSING_PUB)
-        super().close()
+        await super().close()
         if not self.producer:
             raise ClosingFailedExcpetion("No producer to sub.")
         logging.debug(log_msgs.CLOSED_PUB)
 
-    def send_message(self, msg: bytes) -> None:
+    async def send_message(self, msg: bytes) -> None:
         """Send a message on a queue."""
         logging.debug(log_msgs.SENDING_MESSAGE)
         if not self.producer:
@@ -117,10 +117,10 @@ class PulsarSub(Pulsar, Sub):
         self.subscription_name = subscription_name
         self.prefetch = 1
 
-    def connect(self) -> None:
+    async def connect(self) -> None:
         """Connect to subscriber."""
         logging.debug(log_msgs.CONNECTING_SUB)
-        super().connect()
+        await super().connect()
 
         self.consumer = self.client.subscribe(
             self.topic,
@@ -132,13 +132,13 @@ class PulsarSub(Pulsar, Sub):
         )
         logging.debug(log_msgs.CONNECTED_SUB)
 
-    def close(self) -> None:
+    async def close(self) -> None:
         """Close client and redeliver any unacknowledged messages."""
         logging.debug(log_msgs.CLOSING_SUB)
         if not self.consumer:
             raise ClosingFailedExcpetion("No consumer to close.")
         self.consumer.redeliver_unacknowledged_messages()
-        super().close()
+        await super().close()
         logging.debug(log_msgs.CLOSED_SUB)
 
     @staticmethod
@@ -158,7 +158,7 @@ class PulsarSub(Pulsar, Sub):
         else:
             return Message(id_, data)
 
-    def get_message(
+    async def get_message(
         self, timeout_millis: Optional[int] = TIMEOUT_MILLIS_DEFAULT
     ) -> Optional[Message]:
         """Get a single message from a queue.
@@ -195,9 +195,9 @@ class PulsarSub(Pulsar, Sub):
                     return None
                 # https://github.com/apache/pulsar/issues/3127
                 if str(e) == "Pulsar error: AlreadyClosed":
-                    self.close()
+                    await self.close()
                     time.sleep(RETRY_DELAY)
-                    self.connect()
+                    await self.connect()
                     continue
                 logging.debug(
                     f"{log_msgs.GETMSG_RAISE_OTHER_ERROR} ({e.__class__.__name__})."
@@ -207,7 +207,7 @@ class PulsarSub(Pulsar, Sub):
         logging.debug(log_msgs.GETMSG_CONNECTION_ERROR_MAX_RETRIES)
         raise Exception("Pulsar connection error")
 
-    def ack_message(self, msg: Message) -> None:
+    async def ack_message(self, msg: Message) -> None:
         """Ack a message from the queue."""
         logging.debug(log_msgs.ACKING_MESSAGE)
         if not self.consumer:
@@ -221,7 +221,7 @@ class PulsarSub(Pulsar, Sub):
         msg.ack_status = Message.AckStatus.ACKED
         logging.debug(f"{log_msgs.ACKED_MESSAGE} ({msg.msg_id!r}).")
 
-    def reject_message(self, msg: Message) -> None:
+    async def reject_message(self, msg: Message) -> None:
         """Reject (nack) a message from the queue."""
         logging.debug(log_msgs.NACKING_MESSAGE)
         if not self.consumer:
@@ -235,9 +235,9 @@ class PulsarSub(Pulsar, Sub):
         msg.ack_status = Message.AckStatus.NACKED
         logging.debug(f"{log_msgs.NACKED_MESSAGE} ({msg.msg_id!r}).")
 
-    def message_generator(
+    async def message_generator(  # type: ignore[override] # there's a mypy bug here
         self, timeout: int = 60, propagate_error: bool = True
-    ) -> Generator[Optional[Message], None, None]:
+    ) -> AsyncGenerator[Optional[Message], None]:
         """Yield Messages.
 
         Generate messages with variable timeout.
@@ -256,7 +256,7 @@ class PulsarSub(Pulsar, Sub):
             while True:
                 # get message
                 logging.debug(log_msgs.MSGGEN_GET_NEW_MESSAGE)
-                msg = self.get_message(timeout_millis=timeout * 1000)
+                msg = await self.get_message(timeout_millis=timeout * 1000)
                 if msg is None:
                     logging.info(log_msgs.MSGGEN_NO_MESSAGE_LOOK_BACK_IN_QUEUE)
                     break
@@ -298,21 +298,23 @@ class Backend(backend_interface.Backend):
     SUBSCRIPTION_NAME = "i3-pulsar-sub"
 
     @staticmethod
-    def create_pub_queue(address: str, name: str, auth_token: str = "") -> PulsarPub:
+    async def create_pub_queue(
+        address: str, name: str, auth_token: str = ""
+    ) -> PulsarPub:
         """Create a publishing queue."""
         q = PulsarPub(  # pylint: disable=invalid-name
             address, name, auth_token=auth_token
         )
-        q.connect()
+        await q.connect()
         return q
 
     @staticmethod
-    def create_sub_queue(
+    async def create_sub_queue(
         address: str, name: str, prefetch: int = 1, auth_token: str = ""
     ) -> PulsarSub:
         """Create a subscription queue."""
         # pylint: disable=invalid-name
         q = PulsarSub(address, name, Backend.SUBSCRIPTION_NAME, auth_token=auth_token)
         q.prefetch = prefetch
-        q.connect()
+        await q.connect()
         return q

@@ -2,8 +2,8 @@
 
 import logging
 
-from mqclient.implementation_tests import integrate_backend_interface, integrate_queue
-from mqclient.implementation_tests.utils import (  # pytest.fixture # noqa: F401 # pylint: disable=W0611
+from mqclient.abstract_backend_tests import integrate_backend_interface, integrate_queue
+from mqclient.abstract_backend_tests.utils import (  # pytest.fixture # noqa: F401 # pylint: disable=W0611
     queue_name,
 )
 from mqclient_pulsar.apachepulsar import Backend
