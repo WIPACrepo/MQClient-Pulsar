@@ -21,6 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'  # REMOVE ONCE 3.10 IS SUPPORTED BY `pulsar-client`
       - run: pip install mypy
       - run: |
           ([ -e "requirements-dev.txt" ] && pip install -r requirements-dev.txt) || echo "no dev reqs"
