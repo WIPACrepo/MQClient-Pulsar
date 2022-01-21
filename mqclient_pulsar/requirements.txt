@@ -1,3 +1,2 @@
 apache-bookkeeper-client
-git+https://github.com/WIPACrepo/MQClient@v0.2.1#egg=mqclient
 pulsar-client
