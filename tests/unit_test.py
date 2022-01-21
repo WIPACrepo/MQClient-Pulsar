@@ -15,17 +15,17 @@ class TestUnitApachePulsar(BackendUnitTest):
     con_patch = "pulsar.Client"
 
     @staticmethod
-    def _get_mock_nack(mock_con: Any) -> Any:
+    def _get_nack_mock_fn(mock_con: Any) -> Any:
         """Return mock 'nack' function call."""
         return mock_con.return_value.subscribe.return_value.negative_acknowledge
 
     @staticmethod
-    def _get_mock_ack(mock_con: Any) -> Any:
+    def _get_ack_mock_fn(mock_con: Any) -> Any:
         """Return mock 'ack' function call."""
         return mock_con.return_value.subscribe.return_value.acknowledge
 
     @staticmethod
-    def _get_mock_close(mock_con: Any) -> Any:
+    def _get_close_mock_fn(mock_con: Any) -> Any:
         """Return mock 'close' function call."""
         return mock_con.return_value.close
 
