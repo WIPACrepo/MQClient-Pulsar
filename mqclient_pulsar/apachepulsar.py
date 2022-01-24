@@ -235,7 +235,7 @@ class PulsarSub(Pulsar, Sub):
         msg.ack_status = Message.AckStatus.NACKED
         logging.debug(f"{log_msgs.NACKED_MESSAGE} ({msg.msg_id!r}).")
 
-    async def message_generator(  # type: ignore[override] # there's a mypy bug here
+    async def message_generator(
         self, timeout: int = 60, propagate_error: bool = True
     ) -> AsyncGenerator[Optional[Message], None]:
         """Yield Messages.
