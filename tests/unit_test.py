@@ -98,10 +98,12 @@ class TestUnitApachePulsar(BackendUnitTest):
         mock_con.return_value.subscribe.return_value.receive.side_effect = Exception()
         with pytest.raises(Exception):
             _ = [m async for m in sub.message_generator()]
-        self._get_mock_close(mock_con).assert_not_called()  # would be called by Queue
+        # would be called by Queue
+        self._get_close_mock_fn(mock_con).assert_not_called()
 
         # `propagate_error` attribute has no affect (b/c it deals w/ *downstream* errors)
         mock_con.return_value.subscribe.return_value.receive.side_effect = Exception()
         with pytest.raises(Exception):
             _ = [m async for m in sub.message_generator(propagate_error=False)]
-        self._get_mock_close(mock_con).assert_not_called()  # would be called by Queue
+        # would be called by Queue
+        self._get_close_mock_fn(mock_con).assert_not_called()
