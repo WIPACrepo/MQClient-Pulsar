@@ -44,12 +44,14 @@ class TestUnitApachePulsar(BackendUnitTest):
             ids
         )
 
+    @pytest.mark.asyncio
     async def test_create_pub_queue(self, mock_con: Any, queue_name: str) -> None:
         """Test creating pub queue."""
         pub = await self.backend.create_pub_queue("localhost", queue_name)
         assert pub.topic == queue_name
         mock_con.return_value.create_producer.assert_called()
 
+    @pytest.mark.asyncio
     async def test_create_sub_queue(self, mock_con: Any, queue_name: str) -> None:
         """Test creating sub queue."""
         sub = await self.backend.create_sub_queue("localhost", queue_name, prefetch=213)
@@ -57,6 +59,7 @@ class TestUnitApachePulsar(BackendUnitTest):
         assert sub.prefetch == 213
         mock_con.return_value.subscribe.assert_called()
 
+    @pytest.mark.asyncio
     async def test_send_message(self, mock_con: Any, queue_name: str) -> None:
         """Test sending message."""
         pub = await self.backend.create_pub_queue("localhost", queue_name)
@@ -65,6 +68,7 @@ class TestUnitApachePulsar(BackendUnitTest):
             b"foo, bar, baz"
         )
 
+    @pytest.mark.asyncio
     async def test_get_message(self, mock_con: Any, queue_name: str) -> None:
         """Test getting message."""
         sub = await self.backend.create_sub_queue("localhost", queue_name)
@@ -80,6 +84,7 @@ class TestUnitApachePulsar(BackendUnitTest):
         assert m.msg_id == 12
         assert m.data == "foo, bar"
 
+    @pytest.mark.asyncio
     async def test_message_generator_10_upstream_error(
         self, mock_con: Any, queue_name: str
     ) -> None:
