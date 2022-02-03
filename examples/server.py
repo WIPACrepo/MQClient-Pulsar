@@ -11,12 +11,13 @@ from mqclient_pulsar import Queue
 
 async def server(work_queue: Queue, result_queue: Queue) -> None:
     """Demo example server."""
-    for i in range(100):
-        await work_queue.send({"id": i, "cmd": f'echo "{i}"'})
+    async with work_queue.open_pub() as p:
+        for i in range(100):
+            await p.send({"id": i, "cmd": f'echo "{i}"'})
 
     results = {}
     result_queue.timeout = 5
-    async with result_queue.recv() as stream:
+    async with result_queue.open_sub() as stream:
         async for data in stream:
             assert isinstance(data, dict)
             results[typing.cast(int, data["id"])] = typing.cast(str, data["out"])

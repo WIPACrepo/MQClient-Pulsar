@@ -218,7 +218,6 @@ class PulsarSub(Pulsar, Sub):
         else:
             self.consumer.acknowledge(msg.msg_id)
 
-        msg.ack_status = Message.AckStatus.ACKED
         logging.debug(f"{log_msgs.ACKED_MESSAGE} ({msg.msg_id!r}).")
 
     async def reject_message(self, msg: Message) -> None:
@@ -232,7 +231,6 @@ class PulsarSub(Pulsar, Sub):
         else:
             self.consumer.negative_acknowledge(msg.msg_id)
 
-        msg.ack_status = Message.AckStatus.NACKED
         logging.debug(f"{log_msgs.NACKED_MESSAGE} ({msg.msg_id!r}).")
 
     async def message_generator(
