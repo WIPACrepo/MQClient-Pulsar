@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2022-02-03)
+### Feature
+* Upgrade to MQClient's Breaking Changes ([#9](https://github.com/WIPACrepo/MQClient-Pulsar/issues/9)) ([`856a5dd`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/856a5dd6fceeab2dbdd432c08c6aab545f9d9105))
+
 ## v0.1.2 (2022-01-25)
 
 
