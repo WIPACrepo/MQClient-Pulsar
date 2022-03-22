@@ -1,4 +1,5 @@
 asyncstdlib
+coloredlogs
 flake8
 mypy
 pytest
