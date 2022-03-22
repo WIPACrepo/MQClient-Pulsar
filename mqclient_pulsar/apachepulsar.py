@@ -53,6 +53,7 @@ class Pulsar(RawQueue):
         if not self.client:
             raise ClosingFailedExcpetion("No client to close.")
         try:
+            time.sleep(0.1)
             self.client.close()
         except Exception as e:
             # https://github.com/apache/pulsar/issues/3127
