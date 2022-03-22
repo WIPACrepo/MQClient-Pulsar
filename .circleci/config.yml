@@ -44,7 +44,7 @@ jobs:
             - run: dockerize -wait tcp://localhost:8080 -timeout 1m # Pulsar
             - run: dockerize -wait tcp://localhost:6650 -timeout 1m # Pulsar
             - run: |
-                pip install --user tox wipqc-mqclient[telemetry]
+                pip install --user tox wipac-mqclient[telemetry]
                 tox integrate_tests/ -vv
 
     examples:
