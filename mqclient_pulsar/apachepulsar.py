@@ -180,9 +180,7 @@ class PulsarSub(Pulsar, Sub):
                 recvd = self.consumer.receive(timeout_millis=timeout_millis)
                 msg = PulsarSub._to_message(recvd)
                 if msg:
-                    logging.debug(
-                        f"{log_msgs.GETMSG_RECEIVED_MESSAGE} ({msg.msg_id!r})."
-                    )
+                    logging.debug(f"{log_msgs.GETMSG_RECEIVED_MESSAGE} ({msg}).")
                     return msg
                 else:
                     logging.debug(log_msgs.GETMSG_NO_MESSAGE)
@@ -218,7 +216,7 @@ class PulsarSub(Pulsar, Sub):
         else:
             self.consumer.acknowledge(msg.msg_id)
 
-        logging.debug(f"{log_msgs.ACKED_MESSAGE} ({msg.msg_id!r}).")
+        logging.debug(f"{log_msgs.ACKED_MESSAGE} ({msg}).")
 
     async def reject_message(self, msg: Message) -> None:
         """Reject (nack) a message from the queue."""
@@ -231,7 +229,7 @@ class PulsarSub(Pulsar, Sub):
         else:
             self.consumer.negative_acknowledge(msg.msg_id)
 
-        logging.debug(f"{log_msgs.NACKED_MESSAGE} ({msg.msg_id!r}).")
+        logging.debug(f"{log_msgs.NACKED_MESSAGE} ({msg}).")
 
     async def message_generator(
         self, timeout: int = 60, propagate_error: bool = True
