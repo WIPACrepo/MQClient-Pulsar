@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-03-23)
+### Feature
+* Updates for PyPI Publish ([#10](https://github.com/WIPACrepo/MQClient-Pulsar/issues/10)) ([`16bcffb`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/16bcffb54705bc46aa471b5ea3c5cfa31114be6b))
+
 ## v0.2.0 (2022-02-03)
 ### Feature
 * Upgrade to MQClient's Breaking Changes ([#9](https://github.com/WIPACrepo/MQClient-Pulsar/issues/9)) ([`856a5dd`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/856a5dd6fceeab2dbdd432c08c6aab545f9d9105))
