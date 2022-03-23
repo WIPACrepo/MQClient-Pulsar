@@ -33,7 +33,7 @@ six==1.16.0
     #   pulsar-client
 urllib3==1.26.9
     # via requests
-wipac-mqclient==0.4.0
+wipac-mqclient==0.4.2
     # via wipac-mqclient-pulsar (setup.py)
 
 # The following packages are considered to be unsafe in a requirements file:
