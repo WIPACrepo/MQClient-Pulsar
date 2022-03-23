@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
+        with:
+          python-version: 3.9  # TODO - remove this when 3.10 is supported by pulsar-client
       - uses: WIPACrepo/wipac-dev-mypy-action@v1
 
   py-setup:
