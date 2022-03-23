@@ -1,5 +1,6 @@
 """Back-end using Apache Pulsar."""
 
+import asyncio
 import logging
 import time
 from typing import AsyncGenerator, Optional
@@ -138,6 +139,7 @@ class PulsarSub(Pulsar, Sub):
         logging.debug(log_msgs.CLOSING_SUB)
         if not self.consumer:
             raise ClosingFailedExcpetion("No consumer to close.")
+        await asyncio.sleep(0.1)
         self.consumer.redeliver_unacknowledged_messages()
         await super().close()
         logging.debug(log_msgs.CLOSED_SUB)
