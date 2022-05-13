@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2022-05-13)
+### Feature
+* Package-Specific Logger `"mqclient-pulsar"` ([#11](https://github.com/WIPACrepo/MQClient-Pulsar/issues/11)) ([`ff2465b`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/ff2465b8823a45c344cb6b225944205c72bec899))
+
 ## v0.3.0 (2022-03-23)
 ### Feature
 * Updates for PyPI Publish ([#10](https://github.com/WIPACrepo/MQClient-Pulsar/issues/10)) ([`16bcffb`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/16bcffb54705bc46aa471b5ea3c5cfa31114be6b))
