@@ -23,7 +23,7 @@ six==1.16.0
     #   apache-bookkeeper-client
     #   grpcio
     #   pulsar-client
-wipac-mqclient==0.4.2
+wipac-mqclient==0.5.0
     # via wipac-mqclient-pulsar (setup.py)
 
 # The following packages are considered to be unsafe in a requirements file:
