@@ -6,13 +6,13 @@
 #
 apache-bookkeeper-client==4.15.0
     # via wipac-mqclient-pulsar (setup.py)
-certifi==2021.10.8
+certifi==2022.6.15
     # via pulsar-client
 grpcio==1.27.2
     # via apache-bookkeeper-client
-protobuf==3.20.1
+protobuf==4.21.2
     # via apache-bookkeeper-client
-pulsar-client==2.10.0
+pulsar-client==2.10.1
     # via wipac-mqclient-pulsar (setup.py)
 pymmh3==0.0.5
     # via apache-bookkeeper-client
