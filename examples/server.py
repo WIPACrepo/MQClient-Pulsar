@@ -31,18 +31,48 @@ async def server(work_queue: Queue, result_queue: Queue) -> None:
 if __name__ == "__main__":
     coloredlogs.install(level=logging.DEBUG)
 
-    parser = argparse.ArgumentParser(description="Worker")
-    parser.add_argument("--address", default="localhost", help="queue address")
-    parser.add_argument("--work-queue", default="queue1", help="work queue")
-    parser.add_argument("--result-queue", default="queue2", help="result queue")
+    parser = argparse.ArgumentParser(
+        description="Worker",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument(
-        "--prefetch", type=int, default=10, help="result queue prefetch"
+        "--address",
+        default="localhost",
+        help="queue address",
+    )
+    parser.add_argument(
+        "--work-queue",
+        default="example-queue-1",
+        help="work queue",
+    )
+    parser.add_argument(
+        "--result-queue",
+        default="example-queue-2",
+        help="result queue",
+    )
+    parser.add_argument(
+        "--prefetch",
+        type=int,
+        default=10,
+        help="result queue prefetch",
+    )
+    parser.add_argument(
+        "--auth",
+        default="",
+        help="auth token for MQ server",
     )
     args = parser.parse_args()
 
-    workq = Queue(address=args.address, name=args.work_queue)
+    workq = Queue(
+        address=args.address,
+        name=args.work_queue,
+        auth_token=args.auth,
+    )
     resultq = Queue(
-        address=args.address, name=args.result_queue, prefetch=args.prefetch
+        address=args.address,
+        name=args.result_queue,
+        prefetch=args.prefetch,
+        auth_token=args.auth,
     )
 
     asyncio.get_event_loop().run_until_complete(server(workq, resultq))
