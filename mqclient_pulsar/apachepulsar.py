@@ -85,13 +85,14 @@ class PulsarPub(Pulsar, Pub):
 
         # create sub so that subscription is created so messages are forwarded from topic
         # https://pulsar.apache.org/assets/images/pulsar-subscription-types-664733b68c7124129ca7d0e04dedcb96.png
-        sub = PulsarSub(
+        inner_sub = PulsarSub(
             self.address,
             self.topic,
             Backend.SUBSCRIPTION_NAME,
             auth_token=self._auth_token,
         )
-        await sub.connect()
+        await inner_sub.connect()
+        await inner_sub.close()
 
         self.producer = self.client.create_producer(self.topic)
         LOGGER.debug(log_msgs.CONNECTED_PUB)
