@@ -44,6 +44,7 @@ class Pulsar(RawQueue):
         self.topic = topic
         self.client = None  # type: pulsar.Client
         self.auth = pulsar.AuthenticationToken(auth_token) if auth_token else None
+        self._auth_token = auth_token
 
     async def connect(self) -> None:
         """Set up client."""
@@ -81,6 +82,16 @@ class PulsarPub(Pulsar, Pub):
         """Connect to producer."""
         LOGGER.debug(log_msgs.CONNECTING_PUB)
         await super().connect()
+
+        # create sub so that subscription is created so messages are forwarded from topic
+        # https://pulsar.apache.org/assets/images/pulsar-subscription-types-664733b68c7124129ca7d0e04dedcb96.png
+        sub = PulsarSub(
+            self.address,
+            self.topic,
+            Backend.SUBSCRIPTION_NAME,
+            auth_token=self._auth_token,
+        )
+        await sub.connect()
 
         self.producer = self.client.create_producer(self.topic)
         LOGGER.debug(log_msgs.CONNECTED_PUB)
