@@ -2,6 +2,9 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2022-06-29)
+
+
 ## v0.4.0 (2022-05-13)
 ### Feature
 * Package-Specific Logger `"mqclient-pulsar"` ([#11](https://github.com/WIPACrepo/MQClient-Pulsar/issues/11)) ([`ff2465b`](https://github.com/WIPACrepo/MQClient-Pulsar/commit/ff2465b8823a45c344cb6b225944205c72bec899))
