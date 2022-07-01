@@ -18,6 +18,7 @@ from mqclient.backend_interface import (
     RawQueue,
     Sub,
 )
+from wipac_dev_tools import from_environment
 
 LOGGER = logging.getLogger("mqclient-pulsar")
 
@@ -137,10 +138,20 @@ class PulsarSub(Pulsar, Sub):
         LOGGER.debug(log_msgs.CONNECTING_SUB)
         await super().connect()
 
+        env = from_environment({"PULSAR_UNACKED_MESSAGES_TIMEOUT_SEC": 0})
+        unacked_messages_timeout_sec = int(
+            env.get("PULSAR_UNACKED_MESSAGES_TIMEOUT_SEC", 0)
+        )
+
         self.consumer = self.client.subscribe(
             self.topic,
             self.subscription_name,
             receiver_queue_size=self.prefetch,
+            unacked_messages_timeout_ms=(
+                unacked_messages_timeout_sec * 1000
+                if unacked_messages_timeout_sec and unacked_messages_timeout_sec > 10
+                else None
+            ),
             consumer_type=pulsar.ConsumerType.Shared,
             initial_position=pulsar.InitialPosition.Earliest,
             negative_ack_redelivery_delay_ms=0,
