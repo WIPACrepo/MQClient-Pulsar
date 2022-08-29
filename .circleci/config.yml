@@ -4,7 +4,7 @@ jobs:
 
     test:
         docker:
-            - image: circleci/python:3.8
+            - image: circleci/python:3.10
         steps:
             - checkout
             - run: |
@@ -13,7 +13,7 @@ jobs:
 
     integrate:
         docker:
-            - image: circleci/python:3.8
+            - image: circleci/python:3.10
             - image: apachepulsar/pulsar:2.5.1
               command: bin/pulsar standalone
         steps:
@@ -31,7 +31,7 @@ jobs:
 
     integrate-w-telemetry:
         docker:
-            - image: circleci/python:3.8
+            - image: circleci/python:3.10
             - image: apachepulsar/pulsar:2.5.1
               command: bin/pulsar standalone
         steps:
@@ -49,7 +49,7 @@ jobs:
 
     examples:
         docker:
-            - image: circleci/python:3.8
+            - image: circleci/python:3.10
             - image: apachepulsar/pulsar:2.5.1
               command: bin/pulsar standalone
         steps:
@@ -69,7 +69,7 @@ jobs:
 
     pycycle:
         docker:
-            - image: circleci/python:3.8
+            - image: circleci/python:3.10
         steps:
             - checkout
             - run: |
